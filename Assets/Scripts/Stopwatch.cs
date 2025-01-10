@@ -49,17 +49,16 @@ namespace Stopwatch
         void Update()
         {
             _getEvent = true;
-            Debug.Log("Main Thread Running");
+            // Debug.Log("Main Thread Running");
             if (_isRunning)
             {
                 _stopTime = GetTimeStamp();
                 // Thread.Sleep(100);
-            }
-
-            if (TimeEnough(_startTime, _stopTime, _duration))
-            {
-                _stopwatchNumber++;
-                _duration++;
+                if (TimeEnough(_startTime, _stopTime, _duration))
+                {
+                    _stopwatchNumber++;
+                    _duration++;
+                }
             }
             
             _stopwatch.text = (0.1 * _stopwatchNumber).ToString(CultureInfo.InvariantCulture);
@@ -70,8 +69,17 @@ namespace Stopwatch
         {
             if (KeyStatus.Space)
             {
-                _isRunning = !_isRunning;
-                Debug.Log("Space pressed");
+                // Debug.Log("Space pressed");
+                
+                if (!_isRunning)
+                {
+                    _isRunning = true;
+                    _startTime = GetTimeStamp();
+                    _duration = 1;
+                    return;
+                }
+
+                _isRunning = false;
             }
 
             if (KeyStatus.R)
@@ -79,10 +87,10 @@ namespace Stopwatch
                 _isRunning = false;
                 _stopwatchNumber = 0;
                 _duration = 1;
-                Debug.Log("R pressed");
+                // Debug.Log("R pressed");
             }
             
-            Debug.Log("GetKeyEvents called");
+            // Debug.Log("GetKeyEvents called");
         }
 
         bool TimeEnough(long startTime, long stopTime, long duration)
@@ -100,11 +108,5 @@ namespace Stopwatch
             TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return long.Parse(Convert.ToInt64(ts.TotalMilliseconds).ToString());
         }
-    }
-
-    public enum Keys
-    {
-        Space,
-        R
     }
 }
